@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Newschool</title>
+        <link rel="stylesheet" href="../Bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../Bootstrap/fontawesome-free-5.10.1-web/css/all.css">
+    </head>
+    <body onload="displayStudents()">
+       <marquee behavior="" direction=""><h4 class="my-4 text-danger">WELCOME TO JAVASCRIPT SCHOOLS</h4></marquee> 
+       <div class="container my-3">
+            <h3 class="text-center" style="font-family:cursive;">KINDLY COMPLETE YOUR DETAILS HERE</h3>
+            <div class="row">
+                <div class="col-sm-6 mx-auto shadow-sm">
+                    <label for="">First Name :</label>
+                    <input type="text" class="form-control shadow-none my-2"
+                        placeholder="Enter Your First Name" id="firstName">
+                        <label for="">Last Name :</label>
+                    <input type="text" class="form-control shadow-none my-2"
+                        placeholder="Enter Your Last Name" id="lastName">
+                        <label for="">Email :</label>
+                    <input type="text" class="form-control shadow-none my-2"
+                        placeholder="Enter Your Email" id="email">
+                        <label for="">Password :</label>
+                    <input type="password" class="form-control shadow-none my-2"
+                        placeholder="Enter Your Password" id="password">
+                    <button class="btn btn-outline-success" onclick="register()">REGISTER</button>
+                </div>
+                <div class="col-sm-6">
+                    <img class="img-thumbnail w-100" src="./images/5.jpg" alt="" />
+                </div>
+            </div>
+
+        </div>
+        <div id="display"></div>
+        <div id="show"></div>
+        <script>
+        var allStudents = []
+        allStudents = JSON.parse(localStorage.getItem('localStudents'))
+        function register(){
+            var student = {
+                firstName:firstName.value,
+                lastName:lastName.value,
+                email:email.value,
+                password:password.value
+            }
+            if (firstName.value == '' || lastName.value == '' || email.value == '' || password.value == '') {
+                alert('Kindly Fill up the empty spaces')
+            } else {
+                allStudents.push(student)
+                displayStudents()
+                localStorage.setItem('localStudents',JSON.stringify(allStudents))
+            firstName.value = ''
+            lastName.value = ''
+            email.value = ''
+            password.value = ''
+            }
+            
+        }
+
+        function deleteStudent(index) {
+            allStudents.splice(index,1)
+            displayStudents()
+            localStorage.setItem('localStudents',JSON.stringify(allStudents))
+            
+        }
+
+        function editStudent(index){
+            show.innerHTML = `<div class='container'>
+            <input type='text' class='form-control shadow-none my-2' placeholder = 'Enter your new First Name' id='fName' value=${allStudents[index].firstName}>
+            <input type='text' class='form-control shadow-none my-2' placeholder = 'Enter your new Last Name' id='lName' value=${allStudents[index].lastName}>
+            <input type='text' class='form-control shadow-none my-2' placeholder = 'Enter your new Email' id= 'mail' value=${allStudents[index].email}>
+            <input type='password' class='form-control shadow-none my-2' placeholder = 'Enter your new Password' id='pass' value=${allStudents[index].password}>
+            <button class='btn btn-primary' onclick='update(${index})'>Save Changes</button>
+           </div>
+            `
+            displayStudents()
+        }
+
+        function update(index){
+            var newDetails = {
+                firstName:fName.value,
+                lastName:lName.value,
+                email:mail.value,
+                password:pass.value
+            }
+        allStudents.splice(index,1,newDetails)
+        // localStorage.setItem('localStudents', JSON.stringify(allStudents))
+        displayStudents()
+        show.innerHTML = ''
+            
+        }
+
+        function displayStudents(){
+            display.innerHTML = ''
+            table = `<table class='table table-condensed my-5 mx-5'><thead><tr><th>S/N</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Password</th><th>Delete</th><th>Edit</th></tr></thead>`
+                
+            for (let index = 0; index < allStudents.length; index++) {
+                table += `
+                <tr>
+                <td>${index +1}</td>
+                <td>  ${allStudents[index].firstName}</td>
+                <td> ${allStudents[index].lastName}</td>
+                <td> ${allStudents[index].email}</td>
+                <td> ${allStudents[index].password}</td>
+                <td><button title='delete' class='btn btn-danger' onclick='deleteStudent(${index})'><i class='fa fa-trash'></i></button></td>
+               <td> <button title='edit' class='btn btn-success' onclick='editStudent(${index})'><i class='fa fa-edit'></i></button></td>
+                </tr>
+                
+                `
+
+            }
+            display.innerHTML += `${table}`
+        }
+    </script>
+    </body>
+</html>
